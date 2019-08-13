@@ -1,0 +1,22 @@
+{
+    "name": "graphql-placeholder",
+    "author": {
+        "name": "kingrayhan",
+        "email": "rayhan095@gmail.com",
+        "url": "https://rayhan.info"
+    },
+    "main": "index.js",
+    "scripts": {
+        "start": "babel-node index",
+        "dev": "nodemon index --exec babel-node"
+    },
+    "dependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "graphql-yoga": "^1.17.4",
+        "objectid": "^3.2.1"
+    },
+    "devDependencies": {
+        "nodemon": "^1.19.0"
+    }
+}
