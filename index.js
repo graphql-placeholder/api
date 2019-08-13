@@ -65,6 +65,9 @@ const resolvers = {
 }
 const server = new GraphQLServer({ typeDefs: `${__dirname}/typeDefs.graphql`, resolvers })
 
+/**
+ * Start Graphql Server
+ */
 let port = process.env.PORT || 4000
 server.start({ port }, ({ port }) => {
     console.log('Grapgql server working at http://localhost:' + port)
