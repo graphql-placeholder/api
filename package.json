@@ -7,7 +7,7 @@
     },
     "main": "index.js",
     "scripts": {
-        "start": "babel-node index",
+        "start": "node index",
         "dev": "nodemon index",
         "deploy": "now --public && now alias",
         "debug": "ndb npm run dev"
