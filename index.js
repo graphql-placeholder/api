@@ -1,6 +1,6 @@
-import { GraphQLServer } from 'graphql-yoga'
-import fs from 'fs'
-import objectid from 'objectid'
+const { GraphQLServer } = require('graphql-yoga')
+const fs = require('fs')
+const objectid = require('objectid')
 const users = JSON.parse(fs.readFileSync('./datas/users.json').toString())
 const posts = JSON.parse(fs.readFileSync('./datas/posts.json').toString())
 const comments = JSON.parse(fs.readFileSync('./datas/comments.json').toString())
@@ -13,12 +13,21 @@ const resolvers = {
         users() {
             return users
         },
+        post(parent, args) {
+            return posts.find(post => post.id == args.postId)
+        },
         posts() {
             return posts
         },
-        post(parent, args) {
-            if (args.postId) return posts.find(post => post.id === args.postId)
-            return posts
+        comment(parent, args) {
+            let { commentId } = args
+            let comment = comments.find(comment => comment.id == commentId)
+            return {
+                ...comment,
+            }
+        },
+        comments() {
+            return comments
         },
     },
     Mutation: {
@@ -31,6 +40,24 @@ const resolvers = {
                 userId,
             }
         },
+        updatePost(parent, args, context, info) {
+            let { postId, data } = args
+            let post = posts.find(post => post.id == postId)
+            let updatedPost = {
+                id: postId,
+                ...post,
+                ...data,
+            }
+            return updatedPost
+        },
+        deletePost(parent, args, context, info) {
+            let { postId } = args
+            let post = posts.find(post => post.id == postId)
+            return {
+                ...post,
+            }
+        },
+
         addComment(parent, args, context, info) {
             let { userId, postId, body } = args.data
             return {
@@ -38,6 +65,22 @@ const resolvers = {
                 userId,
                 postId,
                 body,
+            }
+        },
+        updateComment(parent, args, context, info) {
+            let { commentId, data } = args
+            let comment = comments.find(comment => comment.id == commentId)
+            return {
+                id: commentId,
+                ...comment,
+                ...data,
+            }
+        },
+        deleteComment(parent, args, context, info) {
+            let { commentId, data } = args
+            let comment = comments.find(comment => comment.id == commentId)
+            return {
+                ...comment,
             }
         },
     },
@@ -63,7 +106,10 @@ const resolvers = {
         },
     },
 }
-const server = new GraphQLServer({ typeDefs: `${__dirname}/typeDefs.graphql`, resolvers })
+const server = new GraphQLServer({
+    typeDefs: `${__dirname}/typeDefs.graphql`,
+    resolvers,
+})
 
 /**
  * Start Graphql Server

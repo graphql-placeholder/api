@@ -8,16 +8,16 @@
     "main": "index.js",
     "scripts": {
         "start": "babel-node index",
-        "dev": "nodemon index --exec babel-node",
-        "deploy": "now --public && now alias"
+        "dev": "nodemon index",
+        "deploy": "now --public && now alias",
+        "debug": "ndb npm run dev"
     },
     "dependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-preset-env": "^1.7.0",
         "graphql-yoga": "^1.17.4",
         "objectid": "^3.2.1"
     },
     "devDependencies": {
+        "ndb": "^1.1.4",
         "nodemon": "^1.19.0"
     }
 }

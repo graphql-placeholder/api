@@ -4,24 +4,43 @@ input PostInput {
     body: String!
 }
 
+input PostUpdateInput {
+    userId: Int
+    title: String
+    body: String
+}
+
 input CommentInput {
     postId: Int!
     userId: Int!
     body: String!
 }
 
+input CommentUpdateInput {
+    body: String
+}
+
 # -------------- All Queries -------------- #
 type Query {
     user(userId: Int!): User!
     users: [User!]
+    post(postId: ID!): Post!
     posts: [Post!]
-    post(postId: Int): Post!
+    comment(commentId: ID!): Comment!
+    comments: [Comment!]
 }
 
 # -------------- All Mutations -------------- #
 type Mutation {
+    ## Post
     addPost(data: PostInput!): Post!
+    updatePost(postId: ID!, data: PostUpdateInput!): Post!
+    deletePost(postId: ID!): Post!
+
+    ## Comment
     addComment(data: CommentInput!): Comment!
+    updateComment(commentId: ID!, data: CommentUpdateInput!): Comment!
+    deleteComment(commentId: ID!): Comment!
 }
 
 # -------------- Post typedef -------------- #
