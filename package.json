@@ -1,23 +1,28 @@
 {
-    "name": "graphql-placeholder",
-    "author": {
-        "name": "kingrayhan",
-        "email": "rayhan095@gmail.com",
-        "url": "https://rayhan.info"
-    },
-    "main": "index.js",
-    "scripts": {
-        "start": "node index",
-        "dev": "nodemon index",
-        "deploy": "now --public && now alias",
-        "debug": "ndb npm run dev"
-    },
-    "dependencies": {
-        "graphql-yoga": "^1.17.4",
-        "objectid": "^3.2.1"
-    },
-    "devDependencies": {
-        "ndb": "^1.1.4",
-        "nodemon": "^1.19.0"
-    }
+  "name": "graphql-placeholder",
+  "author": {
+    "name": "kingrayhan",
+    "email": "rayhan095@gmail.com",
+    "url": "https://rayhan.info"
+  },
+  "scripts": {
+    "start": "node dist/index",
+    "dev": "ts-node-dev src/index",
+    "build": "tsc",
+    "test": "ts-node test",
+    "deploy": "now --public && now alias",
+    "debug": "ndb npm run dev"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.16.1",
+    "cors": "^2.8.5",
+    "graphql-import": "^1.0.2",
+    "objectid": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.6.0",
+    "ndb": "^1.1.4",
+    "ts-node-dev": "^1.0.0-pre.58",
+    "typescript": "^3.9.7"
+  }
 }
