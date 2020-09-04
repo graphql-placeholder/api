@@ -10,7 +10,7 @@ var graphql_import_1 = require("graphql-import");
 var resolvers_1 = __importDefault(require("./resolvers"));
 var app = express_1.default();
 var server = new apollo_server_express_1.ApolloServer({
-    typeDefs: graphql_import_1.importSchema(__dirname + "/typeDefs.graphql"),
+    typeDefs: graphql_import_1.importSchema(__dirname + "/../typeDefs.graphql"),
     resolvers: resolvers_1.default,
 });
 var port = process.env.PORT || 5000;
