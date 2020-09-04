@@ -9,6 +9,8 @@ const app = express();
 const server = new ApolloServer({
   typeDefs: importSchema(`${__dirname}/../typeDefs.graphql`),
   resolvers,
+  playground: true,
+  introspection: true,
 });
 
 let port = process.env.PORT || 5000;
