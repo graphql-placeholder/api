@@ -14,6 +14,7 @@ import { CommentsModule } from './api/comments/comments.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
+      introspection: true,
     }),
     PostsModule,
     UsersModule,
