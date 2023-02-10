@@ -2,26 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Post {
-  _id: ID!
-  title: String!
-  body: String!
-  thumbnail: String
-  isPublished: Boolean
-}
-
-type PostEdge {
-  cursor: String!
-  node: Post!
-}
-
-type PaginatedPost {
-  edges: [PostEdge!]
-  nodes: [Post!]
-  totalCount: Int!
-  hasNextPage: Boolean!
-}
-
 type User {
   _id: ID!
   first_name: String!
@@ -39,6 +19,27 @@ type UserEdge {
 type UserPagination {
   edges: [UserEdge!]
   nodes: [User!]
+  totalCount: Int!
+  hasNextPage: Boolean!
+}
+
+type Post {
+  _id: ID!
+  title: String!
+  body: String!
+  thumbnail: String
+  isPublished: Boolean
+  author: User
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
+type PaginatedPost {
+  edges: [PostEdge!]
+  nodes: [Post!]
   totalCount: Int!
   hasNextPage: Boolean!
 }
@@ -98,9 +99,23 @@ input UserListQueryDto {
 }
 
 type Mutation {
+  createPost(createPostInput: CreatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  removePost(id: Int!): Post!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
+}
+
+input CreatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input CreateUserInput {

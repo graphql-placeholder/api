@@ -3,17 +3,19 @@ import { Injectable } from '@nestjs/common';
 import { CreatePostInput } from './dto/create-post.input';
 import { PostListQueryDto } from './dto/posts-list.dto';
 import { UpdatePostInput } from './dto/update-post.input';
+import { Post } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {
-  private _db = new LocalDatabaseDriver('posts');
+  private _postsDB = new LocalDatabaseDriver('posts');
+  private _usersDB = new LocalDatabaseDriver('users');
 
   create(createPostInput: CreatePostInput) {
     return 'This action adds a new post';
   }
 
   findAll(payload: PostListQueryDto) {
-    return this._db.list({
+    return this._postsDB.list({
       take: payload.take,
       offset: payload.offset,
       after: payload.after,
@@ -23,8 +25,16 @@ export class PostsService {
     });
   }
 
+  resolveAuthorField(post: Post) {
+    return this._usersDB.findOne({
+      key: '_id',
+      operator: 'eq',
+      value: post.author,
+    });
+  }
+
   findOne(payload: IMatchPayload) {
-    return this._db.findOne(payload);
+    return this._postsDB.findOne(payload);
   }
 
   update(id: number, updatePostInput: UpdatePostInput) {

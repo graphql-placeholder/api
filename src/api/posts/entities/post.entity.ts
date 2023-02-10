@@ -1,3 +1,4 @@
+import { User } from '@/api/users/entities/user.entity';
 import { Paginated } from '@/shared/object-types/paginationObject';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
@@ -17,6 +18,9 @@ export class Post {
 
   @Field(() => Boolean, { nullable: true })
   isPublished: boolean;
+
+  @Field(() => User, { nullable: true })
+  author: User;
 }
 
 @ObjectType()
