@@ -1,5 +1,7 @@
+import { LocalDatabaseDriver } from '@/db';
 import { Injectable } from '@nestjs/common';
 import { CreatePostInput } from './dto/create-post.input';
+import { PostListQueryDto } from './dto/posts-list.dto';
 import { UpdatePostInput } from './dto/update-post.input';
 
 @Injectable()
@@ -8,19 +10,15 @@ export class PostsService {
     return 'This action adds a new post';
   }
 
-  findAll() {
-    return [
-      {
-        id: 1,
-        title: 'Post 1',
-        body: 'Post 1 body',
-      },
-      {
-        id: 2,
-        title: 'Post 2',
-        body: 'Post 2 body',
-      },
-    ];
+  findAll(payload: PostListQueryDto) {
+    const db = new LocalDatabaseDriver('posts');
+    return db.list({
+      take: payload.take,
+      offset: payload.offset,
+      after: payload.after,
+      sort: payload.sort,
+      sortBy: payload.sortBy,
+    });
   }
 
   findOne(id: number) {

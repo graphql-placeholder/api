@@ -7,6 +7,7 @@ specifiers:
   '@nestjs/common': ^9.3.7
   '@nestjs/core': ^9.0.0
   '@nestjs/graphql': ^10.2.0
+  '@nestjs/mapped-types': '*'
   '@nestjs/platform-express': ^9.0.0
   '@nestjs/schematics': ^9.0.0
   '@nestjs/testing': ^9.0.0
@@ -41,6 +42,7 @@ dependencies:
   '@nestjs/common': 9.3.7_ew7gazwbjf4vlpfvmmn4v2vvei
   '@nestjs/core': 9.3.7_ipss6dxf5icme2x7c6jvrkkrmq
   '@nestjs/graphql': 10.2.0_vhr2xii74hrcr4a6tdxtw2z4la
+  '@nestjs/mapped-types': 1.2.2_gzoa7mq33oxaftnwvdaaoxgjv4
   '@nestjs/platform-express': 9.3.7_zmctrozi6xxh3beaccl6ebop6u
   apollo-server-express: 3.11.1_graphql@16.6.0
   class-transformer: 0.5.1

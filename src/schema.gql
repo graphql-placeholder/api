@@ -3,9 +3,21 @@
 # ------------------------------------------------------
 
 type Post {
-  id: ID!
+  _id: ID!
   title: String!
   body: String!
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
+type PaginatedPost {
+  edges: [PostEdge!]
+  nodes: [Post!]
+  totalCount: Int!
+  hasNextPage: Boolean!
 }
 
 type User {
@@ -30,13 +42,12 @@ type UserPagination {
 }
 
 type Query {
-  posts: [Post!]!
-  post(id: Int!): Post!
+  posts(input: PostListQueryDto!): PaginatedPost!
   users(input: UserListQueryDto!): UserPagination!
   user(_id: ID!): User
 }
 
-input UserListQueryDto {
+input PostListQueryDto {
   take: Int!
   offset: Int!
   after: String
@@ -49,24 +60,18 @@ enum SortType {
   DESC
 }
 
+input UserListQueryDto {
+  take: Int!
+  offset: Int!
+  after: String
+  sort: SortType
+  sortBy: String
+}
+
 type Mutation {
-  createPost(createPostInput: CreatePostInput!): Post!
-  updatePost(updatePostInput: UpdatePostInput!): Post!
-  removePost(id: Int!): Post!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
-}
-
-input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
 }
 
 input CreateUserInput {
