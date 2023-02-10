@@ -1,4 +1,4 @@
-import { LocalDatabaseDriver } from '@/db';
+import { IMatchPayload, LocalDatabaseDriver } from '@/db';
 import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
@@ -7,26 +7,25 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  private _db = new LocalDatabaseDriver('users');
 
   create(createUserInput: CreateUserInput) {
     return 'This action adds a new user';
   }
 
   async findAll(payload: UserListQueryDto) {
-    const db = new LocalDatabaseDriver('users');
-    return db.list({
+    return this._db.list({
       take: payload.take,
       offset: payload.offset,
       after: payload.after,
       sort: payload.sort,
       sortBy: payload.sortBy,
+      where: payload.where,
     });
   }
 
-  findOne(id: string) {
-    const db = new LocalDatabaseDriver('users');
-    return db.findOne(id);
+  findOne(payload: IMatchPayload) {
+    return this._db.findOne(payload);
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {

@@ -5,6 +5,7 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UserListQueryDto } from './dto/user-list-query.dto';
 import { graphQLListBuilder } from '@/shared/utils/gql-list-builder';
+import { CommonMatchInput } from '@/shared/dto/CommonFindOneDto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -22,11 +23,8 @@ export class UsersResolver {
   }
 
   @Query(() => User, { name: 'user', nullable: true })
-  async findOne(@Args('_id', { type: () => ID }) id: string) {
-    const data = await this.usersService.findOne(id);
-    return {
-      data,
-    };
+  async findOne(@Args('input') input: CommonMatchInput) {
+    return this.usersService.findOne(input);
   }
 
   @Mutation(() => User)

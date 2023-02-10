@@ -1,4 +1,5 @@
 import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
+import { CommonMatchInput } from './CommonFindOneDto';
 
 export enum SortType {
   ASC = 'asc',
@@ -25,4 +26,7 @@ export class CommonPaginationDto {
 
   @Field(() => String, { nullable: true })
   sortBy?: string;
+
+  @Field(() => CommonMatchInput, { nullable: true })
+  where?: CommonMatchInput;
 }

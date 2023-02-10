@@ -11,6 +11,12 @@ export class Post {
 
   @Field(() => String)
   body: string;
+
+  @Field(() => String, { nullable: true })
+  thumbnail: string;
+
+  @Field(() => Boolean, { nullable: true })
+  isPublished: boolean;
 }
 
 @ObjectType()

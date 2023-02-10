@@ -1,10 +1,11 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { PostsService } from './posts.service';
 import { PaginatedPost, Post } from './entities/post.entity';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
 import { PostListQueryDto } from './dto/posts-list.dto';
 import { graphQLListBuilder } from '@/shared/utils/gql-list-builder';
+import { CommonMatchInput } from '@/shared/dto/CommonFindOneDto';
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -21,10 +22,11 @@ export class PostsResolver {
     return graphQLListBuilder(data);
   }
 
-  // @Query(() => Post, { name: 'post' })
-  // findOne(@Args('id', { type: () => Int }) id: number) {
-  //   return this.postsService.findOne(id);
-  // }
+  @Query(() => Post, { name: 'post', nullable: true })
+  findOne(@Args('input') input: CommonMatchInput) {
+    console.log(input);
+    return this.postsService.findOne(input);
+  }
 
   // @Mutation(() => Post)
   // updatePost(@Args('updatePostInput') updatePostInput: UpdatePostInput) {

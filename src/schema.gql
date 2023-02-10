@@ -6,6 +6,8 @@ type Post {
   _id: ID!
   title: String!
   body: String!
+  thumbnail: String
+  isPublished: Boolean
 }
 
 type PostEdge {
@@ -43,8 +45,9 @@ type UserPagination {
 
 type Query {
   posts(input: PostListQueryDto!): PaginatedPost!
+  post(input: CommonMatchInput!): Post
   users(input: UserListQueryDto!): UserPagination!
-  user(_id: ID!): User
+  user(input: CommonMatchInput!): User
 }
 
 input PostListQueryDto {
@@ -53,11 +56,36 @@ input PostListQueryDto {
   after: String
   sort: SortType
   sortBy: String
+  where: CommonMatchInput
 }
 
 enum SortType {
   ASC
   DESC
+}
+
+input CommonMatchInput {
+  key: String!
+  operator: MatchOperator!
+  value: String
+}
+
+enum MatchOperator {
+  eq
+  ne
+  gt
+  gte
+  lt
+  lte
+  in
+  nin
+  exists
+  contains
+  notContains
+  containsInsensitive
+  startsWith
+  endsWith
+  regex
 }
 
 input UserListQueryDto {
@@ -66,6 +94,7 @@ input UserListQueryDto {
   after: String
   sort: SortType
   sortBy: String
+  where: CommonMatchInput
 }
 
 type Mutation {
