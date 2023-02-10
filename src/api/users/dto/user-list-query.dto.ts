@@ -1,10 +1,5 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { CommonPaginationDto } from '@/shared/dto/CommonPaginationDto';
+import { InputType } from '@nestjs/graphql';
 
 @InputType()
-export class UserListQueryDto {
-  @Field(() => Int, { nullable: true })
-  take?: number;
-
-  @Field(() => Int, { nullable: true })
-  offset?: number;
-}
+export class UserListQueryDto extends CommonPaginationDto {}

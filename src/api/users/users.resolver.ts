@@ -1,9 +1,10 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
+import { User, UserPagination } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UserListQueryDto } from './dto/user-list-query.dto';
+import { graphQLListBuilder } from '@/shared/utils/gql-list-builder';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -14,14 +15,19 @@ export class UsersResolver {
     return this.usersService.create(createUserInput);
   }
 
-  @Query(() => [User], { name: 'users' })
-  findAll(@Args('input') input: UserListQueryDto) {
-    return this.usersService.findAll(input);
+  @Query(() => UserPagination, { name: 'users' })
+  async findAll(@Args('input') input: UserListQueryDto) {
+    console.log(input);
+    const data = await this.usersService.findAll(input);
+    return graphQLListBuilder(data);
   }
 
-  @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.findOne(id);
+  @Query(() => User, { name: 'user', nullable: true })
+  async findOne(@Args('_id', { type: () => ID }) id: string) {
+    const data = await this.usersService.findOne(id);
+    return {
+      data,
+    };
   }
 
   @Mutation(() => User)

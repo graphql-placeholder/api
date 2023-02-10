@@ -13,13 +13,18 @@ export class UsersService {
     return 'This action adds a new user';
   }
 
-  findAll(payload: UserListQueryDto) {
+  async findAll(payload: UserListQueryDto) {
     const db = new LocalDatabaseDriver('users');
-    return db.list({ take: payload.take, offset: payload.offset });
+    return db.list({
+      take: payload.take,
+      offset: payload.offset,
+      after: payload.after,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string) {
+    const db = new LocalDatabaseDriver('users');
+    return db.findOne(id);
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {

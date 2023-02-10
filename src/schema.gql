@@ -17,16 +17,29 @@ type User {
   avatar: String!
 }
 
+type UserEdge {
+  cursor: String!
+  node: User!
+}
+
+type UserPagination {
+  edges: [UserEdge!]
+  nodes: [User!]
+  totalCount: Int!
+  hasNextPage: Boolean!
+}
+
 type Query {
   posts: [Post!]!
   post(id: Int!): Post!
-  users(input: UserListQueryDto!): [User!]!
-  user(id: Int!): User!
+  users(input: UserListQueryDto!): UserPagination!
+  user(_id: ID!): User
 }
 
 input UserListQueryDto {
-  take: Int
-  offset: Int
+  take: Int!
+  offset: Int!
+  after: String
 }
 
 type Mutation {
