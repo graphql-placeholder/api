@@ -17,7 +17,6 @@ export class UsersResolver {
 
   @Query(() => UserPagination, { name: 'users' })
   async findAll(@Args('input') input: UserListQueryDto) {
-    console.log(input);
     const data = await this.usersService.findAll(input);
     return graphQLListBuilder(data);
   }

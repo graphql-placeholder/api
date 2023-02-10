@@ -1,4 +1,13 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
+
+export enum SortType {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+registerEnumType(SortType, {
+  name: 'SortType',
+});
 
 @InputType()
 export class CommonPaginationDto {
@@ -10,4 +19,10 @@ export class CommonPaginationDto {
 
   @Field(() => String, { nullable: true })
   after?: string;
+
+  @Field(() => SortType, { nullable: true })
+  sort?: SortType;
+
+  @Field(() => String, { nullable: true })
+  sortBy?: string;
 }

@@ -40,6 +40,13 @@ input UserListQueryDto {
   take: Int!
   offset: Int!
   after: String
+  sort: SortType
+  sortBy: String
+}
+
+enum SortType {
+  ASC
+  DESC
 }
 
 type Mutation {

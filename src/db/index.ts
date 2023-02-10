@@ -4,6 +4,8 @@ interface IListPayload {
   take: number;
   offset: number;
   after?: string;
+  sort?: 'asc' | 'desc';
+  sortBy?: string;
 }
 
 export class LocalDatabaseDriver {
@@ -26,6 +28,31 @@ export class LocalDatabaseDriver {
 
   async list(payload: IListPayload) {
     const data = await this.openFile();
+
+    if (payload.sortBy && payload.sort === 'asc') {
+      data.sort((a, b) => {
+        if (a[payload.sortBy] > b[payload.sortBy]) {
+          return 1;
+        }
+        if (a[payload.sortBy] < b[payload.sortBy]) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+
+    if (payload.sortBy && payload.sort === 'desc') {
+      data.sort((a, b) => {
+        if (a[payload.sortBy] < b[payload.sortBy]) {
+          return 1;
+        }
+        if (a[payload.sortBy] > b[payload.sortBy]) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+
     if (payload.after) {
       const index = data.findIndex((item) => item._id === payload.after);
       return data.slice(index + 1, index + payload.take + 1);

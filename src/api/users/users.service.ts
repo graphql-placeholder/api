@@ -19,6 +19,8 @@ export class UsersService {
       take: payload.take,
       offset: payload.offset,
       after: payload.after,
+      sort: payload.sort,
+      sortBy: payload.sortBy,
     });
   }
 
