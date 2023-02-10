@@ -1,0 +1,115 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Post {
+  _id: ID!
+  title: String!
+  body: String!
+  thumbnail: String
+  isPublished: Boolean
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
+type PaginatedPost {
+  edges: [PostEdge!]
+  nodes: [Post!]
+  totalCount: Int!
+  hasNextPage: Boolean!
+}
+
+type User {
+  _id: ID!
+  first_name: String!
+  last_name: String!
+  email: String!
+  gender: String!
+  avatar: String!
+}
+
+type UserEdge {
+  cursor: String!
+  node: User!
+}
+
+type UserPagination {
+  edges: [UserEdge!]
+  nodes: [User!]
+  totalCount: Int!
+  hasNextPage: Boolean!
+}
+
+type Query {
+  posts(input: PostListQueryDto!): PaginatedPost!
+  post(input: CommonMatchInput!): Post
+  users(input: UserListQueryDto!): UserPagination!
+  user(input: CommonMatchInput!): User
+}
+
+input PostListQueryDto {
+  take: Int!
+  offset: Int!
+  after: String
+  sort: SortType
+  sortBy: String
+  where: CommonMatchInput
+}
+
+enum SortType {
+  ASC
+  DESC
+}
+
+input CommonMatchInput {
+  key: String!
+  operator: MatchOperator!
+  value: String
+}
+
+enum MatchOperator {
+  eq
+  ne
+  gt
+  gte
+  lt
+  lte
+  in
+  nin
+  exists
+  contains
+  notContains
+  containsInsensitive
+  startsWith
+  endsWith
+  regex
+}
+
+input UserListQueryDto {
+  take: Int!
+  offset: Int!
+  after: String
+  sort: SortType
+  sortBy: String
+  where: CommonMatchInput
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+}
+
+input CreateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
