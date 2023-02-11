@@ -8,23 +8,23 @@ import { UpdatePropertyInput } from './dto/update-property.input';
 export class PropertyResolver {
   constructor(private readonly propertyService: PropertyService) {}
 
-  @Mutation(() => Property)
-  createProperty(@Args('input') input: CreatePropertyInput) {
-    return this.propertyService.create(input);
-  }
-
   @Query(() => [Property], { name: 'property' })
   findAll() {
     return this.propertyService.findAll();
   }
 
   @Query(() => Property, { name: 'property' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.propertyService.findOne(id);
+  findOne(@Args('id', { type: () => String }) id: string) {
+    return this.propertyService.findOne({ _id: id });
   }
 
   @Mutation(() => Property)
-  updateProperty(@Args('updatePropertyInput') input: UpdatePropertyInput) {
+  createProperty(@Args('input') input: CreatePropertyInput) {
+    return this.propertyService.create(input);
+  }
+
+  @Mutation(() => Property)
+  updateProperty(@Args('input') input: UpdatePropertyInput) {
     return this.propertyService.update({ _id: input.id }, input);
   }
 

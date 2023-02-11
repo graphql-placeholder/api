@@ -102,7 +102,7 @@ scalar DateTime
 
 type Query {
   users(input: UserListQueryDto!): UserPagination!
-  property(id: Int!): Property!
+  property(id: String!): Property!
 }
 
 input UserListQueryDto {
@@ -146,7 +146,7 @@ enum MatchOperator {
 type Mutation {
   createUser(input: CreateUserDTO!): User!
   createProperty(input: CreatePropertyInput!): Property!
-  updateProperty(updatePropertyInput: UpdatePropertyInput!): Property!
+  updateProperty(input: UpdatePropertyInput!): Property!
   removeProperty(id: String!): Property!
 }
 

@@ -19,15 +19,20 @@ export class PropertyService {
     return `This action returns all property`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} property`;
+  findOne(filter: FilterQuery<PropertyDocument>) {
+    return this.propertyModel.findOne(filter);
   }
 
-  update(
+  async update(
     filter: FilterQuery<PropertyDocument>,
-    updatePropertyInput: UpdatePropertyInput,
+    input: UpdatePropertyInput,
   ) {
-    return this.propertyModel.updateOne(filter, updatePropertyInput);
+    try {
+      await this.propertyModel.updateOne(filter, input);
+      return this.findOne(filter);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   /**
