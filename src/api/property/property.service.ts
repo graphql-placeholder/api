@@ -40,7 +40,12 @@ export class PropertyService {
    * @param filter FilterQuery<PropertyDocument>
    * @returns
    */
-  remove(filter: FilterQuery<PropertyDocument>) {
-    return this.propertyModel.deleteOne(filter);
+  async remove(filter: FilterQuery<PropertyDocument>) {
+    try {
+      const res = await this.propertyModel.deleteOne(filter);
+      return res.deletedCount > 0;
+    } catch (err) {
+      return false;
+    }
   }
 }

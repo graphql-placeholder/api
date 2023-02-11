@@ -13,7 +13,7 @@ export class PropertyResolver {
     return this.propertyService.findAll();
   }
 
-  @Query(() => Property, { name: 'property' })
+  @Query(() => Property, { name: 'property', nullable: true })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.propertyService.findOne({ _id: id });
   }
@@ -28,7 +28,7 @@ export class PropertyResolver {
     return this.propertyService.update({ _id: input.id }, input);
   }
 
-  @Mutation(() => Property)
+  @Mutation(() => Boolean)
   removeProperty(@Args('id', { type: () => String }) id: string) {
     return this.propertyService.remove({ _id: id });
   }

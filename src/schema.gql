@@ -102,7 +102,7 @@ scalar DateTime
 
 type Query {
   users(input: UserListQueryDto!): UserPagination!
-  property(id: String!): Property!
+  property(id: String!): Property
 }
 
 input UserListQueryDto {
@@ -147,7 +147,7 @@ type Mutation {
   createUser(input: CreateUserDTO!): User!
   createProperty(input: CreatePropertyInput!): Property!
   updateProperty(input: UpdatePropertyInput!): Property!
-  removeProperty(id: String!): Property!
+  removeProperty(id: String!): Boolean!
 }
 
 input CreateUserDTO {
