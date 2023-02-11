@@ -3,14 +3,15 @@ import { PropertyService } from './property.service';
 import { Property } from './entities/property.entity';
 import { CreatePropertyInput } from './dto/create-property.input';
 import { UpdatePropertyInput } from './dto/update-property.input';
+import { PropertyListQueryInput } from './dto/property-list.input';
 
 @Resolver(() => Property)
 export class PropertyResolver {
   constructor(private readonly propertyService: PropertyService) {}
 
-  @Query(() => [Property], { name: 'property' })
-  findAll() {
-    return this.propertyService.findAll();
+  @Query(() => [Property], { name: 'properties' })
+  findAll(@Args('input') input: PropertyListQueryInput) {
+    return this.propertyService.findAll(input);
   }
 
   @Query(() => Property, { name: 'property', nullable: true })

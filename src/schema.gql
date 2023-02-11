@@ -102,6 +102,7 @@ scalar DateTime
 
 type Query {
   users(input: UserListQueryDto!): UserPagination!
+  properties(input: PropertyListQueryInput!): [Property!]!
   property(id: String!): Property
 }
 
@@ -141,6 +142,15 @@ enum MatchOperator {
   startsWith
   endsWith
   regex
+}
+
+input PropertyListQueryInput {
+  take: Int!
+  offset: Int!
+  after: String
+  sort: SortType
+  sortBy: String
+  where: CommonMatchInput
 }
 
 type Mutation {
