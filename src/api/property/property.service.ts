@@ -13,8 +13,22 @@ export class PropertyService {
     @InjectModel(Property.name) private propertyModel: Model<PropertyDocument>,
   ) {}
 
+  /**
+   * Create a property
+   * @param input CreatePropertyInput
+   * @returns
+   */
   async create(input: CreatePropertyInput) {
     return this.propertyModel.create(input);
+  }
+
+  /**
+   * Create many properties
+   * @param input CreatePropertyInput[]
+   * @returns
+   */
+  async createMany(input: CreatePropertyInput[]) {
+    return this.propertyModel.insertMany(input);
   }
 
   async findAll(input: PropertyListQueryInput) {
