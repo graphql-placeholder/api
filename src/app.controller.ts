@@ -9,6 +9,7 @@ export class AppController {
   @Get()
   getHello(@Res() res: Response) {
     // redirect to GraphQL playground
-    return res.redirect('/graphql');
+    return 'Hello';
+    // return res.redirect('/graphql');
   }
 }

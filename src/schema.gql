@@ -2,13 +2,34 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type UserAdditionalDocument {
+  name: String
+  note: String
+  file: String
+}
+
+type UserPaymentInformation {
+  type: String
+  providerName: String
+}
+
 type User {
   _id: ID!
-  first_name: String!
-  last_name: String!
+  name: String
+  contactNumbers: [String!]
+  avatar: String
   email: String!
-  gender: String!
-  avatar: String!
+  additionalDocuments: [UserAdditionalDocument!]
+  paymentInformations: [UserPaymentInformation!]
+  domain: USER_DOMAIN
+}
+
+enum USER_DOMAIN {
+  OWNER
+  PROPERTY_OWNER
+  UNIT_OWNER
+  MANAGER
+  SECURITY_GUARD
 }
 
 type UserEdge {
@@ -23,35 +44,59 @@ type UserPagination {
   hasNextPage: Boolean!
 }
 
-type Post {
-  _id: ID!
-  title: String!
-  body: String!
-  thumbnail: String
-  isPublished: Boolean
-  author: User
+type FixedCost {
+  name: String!
+  amount: Int!
+  note: String!
 }
 
-type PostEdge {
-  cursor: String!
-  node: Post!
+type PropertyOwner {
+  owner: User!
+  ownershipPercentage: Int!
 }
 
-type PaginatedPost {
-  edges: [PostEdge!]
-  nodes: [Post!]
-  totalCount: Int!
-  hasNextPage: Boolean!
+type PropertyServiceProvider {
+  name: String!
+  type: SERVICE_PROVIDER_TYPE
+  note: String
+}
+
+enum SERVICE_PROVIDER_TYPE {
+  SECURITY
+  CLEANING
+  MAINTENANCE
+  OTHER
+}
+
+type Property {
+  """Property name"""
+  name: String!
+  address: String
+  numberOfUnits: Int
+  defaultUnitRentAmount: Int
+  type: PROPERTY_TYPE
+  photos: [String!]
+  owners: [PropertyOwner!]
+  managers: [User!]
+  serviceProviders: [PropertyServiceProvider!]
+  variableCosts: [String!]
+  fixedCosts: [FixedCost!]
+}
+
+enum PROPERTY_TYPE {
+  APARTMENT
+  HOUSE
+  COMMERCIAL
+  INDUSTRIAL
+  OFFICE
 }
 
 type Query {
-  posts(input: PostListQueryDto!): PaginatedPost!
-  post(input: CommonMatchInput!): Post
   users(input: UserListQueryDto!): UserPagination!
-  user(input: CommonMatchInput!): User
+  property(id: Int!): Property!
 }
 
-input PostListQueryDto {
+input UserListQueryDto {
   take: Int!
   offset: Int!
   after: String
@@ -89,42 +134,66 @@ enum MatchOperator {
   regex
 }
 
-input UserListQueryDto {
-  take: Int!
-  offset: Int!
-  after: String
-  sort: SortType
-  sortBy: String
-  where: CommonMatchInput
-}
-
 type Mutation {
-  createPost(createPostInput: CreatePostInput!): Post!
-  updatePost(updatePostInput: UpdatePostInput!): Post!
-  removePost(id: Int!): Post!
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
+  createUser(input: CreateUserDTO!): User!
+  createProperty(createPropertyInput: CreatePropertyInput!): Property!
+  updateProperty(updatePropertyInput: UpdatePropertyInput!): Property!
+  removeProperty(id: Int!): Property!
 }
 
-input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input CreateUserDTO {
+  name: String!
+  email: String!
+  avatar: String
+  contactNumbers: [String!]
+  additionalDocuments: [UserAdditionalDocumentDTO!]
 }
 
-input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input UserAdditionalDocumentDTO {
+  name: String
+  note: String
+  file: String
 }
 
-input CreateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input CreatePropertyInput {
+  """Property name"""
+  name: String!
+  address: String
+  numberOfUnits: Int
+  defaultUnitRentAmount: Int
+  type: PROPERTY_TYPE
+  photos: [String!]
+  ownerIds: [String!]
+  managerIds: [String!]
+  serviceProviders: [PropertyServiceProviderInput!]
+  variableCosts: [String!]
+  fixedCosts: [FixedCostInput!]
 }
 
-input UpdateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+input PropertyServiceProviderInput {
+  name: String!
+  type: SERVICE_PROVIDER_TYPE
+  note: String
+}
+
+input FixedCostInput {
+  name: String!
+  amount: Int!
+  note: String!
+}
+
+input UpdatePropertyInput {
+  """Property name"""
+  name: String
+  address: String
+  numberOfUnits: Int
+  defaultUnitRentAmount: Int
+  type: PROPERTY_TYPE
+  photos: [String!]
+  ownerIds: [String!]
+  managerIds: [String!]
+  serviceProviders: [PropertyServiceProviderInput!]
+  variableCosts: [String!]
+  fixedCosts: [FixedCostInput!]
   id: Int!
 }

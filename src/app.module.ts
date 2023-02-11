@@ -4,21 +4,33 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostsModule } from './api/posts/posts.module';
 import { UsersModule } from './api/users/users.module';
-import { CommentsModule } from './api/comments/comments.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+import { PropertyModule } from './api/property/property.module';
 
 @Module({
   imports: [
+    // ---------------------------------------------------------
+    //  Support modules
+    // ---------------------------------------------------------
+    ConfigModule.forRoot({
+      isGlobal: true,
+      // load: configs,
+      envFilePath: ['.env.prod', '.env.dev', '.env'],
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
       introspection: true,
     }),
-    PostsModule,
+    MongooseModule.forRoot(process.env.DATABASE_URL),
+    // ---------------------------------------------------------
+    // Application modules
+    // ---------------------------------------------------------
     UsersModule,
-    CommentsModule,
+    PropertyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

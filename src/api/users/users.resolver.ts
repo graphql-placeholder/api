@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User, UserPagination } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.input';
+import { CreateUserDTO } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UserListQueryDto } from './dto/user-list-query.dto';
 import { graphQLListBuilder } from '@/shared/utils/gql-list-builder';
@@ -12,28 +12,28 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation(() => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.usersService.create(createUserInput);
+  createUser(@Args('input') input: CreateUserDTO) {
+    return this.usersService.createUser(input);
   }
 
   @Query(() => UserPagination, { name: 'users' })
   async findAll(@Args('input') input: UserListQueryDto) {
-    const data = await this.usersService.findAll(input);
-    return graphQLListBuilder(data);
+    // const data = await this.usersService.findAll(input);
+    // return graphQLListBuilder(data);
   }
 
-  @Query(() => User, { name: 'user', nullable: true })
-  async findOne(@Args('input') input: CommonMatchInput) {
-    return this.usersService.findOne(input);
-  }
+  // @Query(() => User, { name: 'user', nullable: true })
+  // async findOne(@Args('input') input: CommonMatchInput) {
+  //   // return this.usersService.findOne(input);
+  // }
 
-  @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.usersService.update(updateUserInput.id, updateUserInput);
-  }
+  // @Mutation(() => User)
+  // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  //   // return this.usersService.update(updateUserInput.id, updateUserInput);
+  // }
 
-  @Mutation(() => User)
-  removeUser(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.remove(id);
-  }
+  // @Mutation(() => User)
+  // removeUser(@Args('id', { type: () => Int }) id: number) {
+  //   // return this.usersService.remove(id);
+  // }
 }
