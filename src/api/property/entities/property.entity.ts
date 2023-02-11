@@ -1,6 +1,6 @@
 import { User } from '@/api/users/entities/user.entity';
-import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { ObjectType, Field, Int, registerEnumType, ID } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { FixedCost } from './fixed-cost.entity';
 import { PropertyOwner } from './property-owner.entity';
@@ -19,7 +19,11 @@ registerEnumType(PROPERTY_TYPE, {
 });
 
 @ObjectType()
+@Schema({ timestamps: true })
 export class Property {
+  @Field(() => ID)
+  _id?: string;
+
   @Prop()
   @Field(() => String, { description: 'Property name' })
   name: string;
@@ -63,6 +67,12 @@ export class Property {
   @Prop()
   @Field(() => [FixedCost], { nullable: true })
   fixedCosts?: FixedCost[];
+
+  @Field(() => Date)
+  createdAt?: Date;
+
+  @Field(() => Date)
+  updatedAt?: Date;
 }
 
 export type PropertyDocument = HydratedDocument<Property>;

@@ -69,6 +69,8 @@ enum SERVICE_PROVIDER_TYPE {
 }
 
 type Property {
+  _id: ID!
+
   """Property name"""
   name: String!
   address: String
@@ -81,6 +83,8 @@ type Property {
   serviceProviders: [PropertyServiceProvider!]
   variableCosts: [String!]
   fixedCosts: [FixedCost!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 enum PROPERTY_TYPE {
@@ -90,6 +94,11 @@ enum PROPERTY_TYPE {
   INDUSTRIAL
   OFFICE
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Query {
   users(input: UserListQueryDto!): UserPagination!
@@ -136,9 +145,9 @@ enum MatchOperator {
 
 type Mutation {
   createUser(input: CreateUserDTO!): User!
-  createProperty(createPropertyInput: CreatePropertyInput!): Property!
+  createProperty(input: CreatePropertyInput!): Property!
   updateProperty(updatePropertyInput: UpdatePropertyInput!): Property!
-  removeProperty(id: Int!): Property!
+  removeProperty(id: String!): Property!
 }
 
 input CreateUserDTO {
@@ -195,5 +204,5 @@ input UpdatePropertyInput {
   serviceProviders: [PropertyServiceProviderInput!]
   variableCosts: [String!]
   fixedCosts: [FixedCostInput!]
-  id: Int!
+  id: String!
 }

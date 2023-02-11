@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { CreatePropertyInput } from './dto/create-property.input';
 import { UpdatePropertyInput } from './dto/update-property.input';
 import { Property, PropertyDocument } from './entities/property.entity';
@@ -9,12 +9,10 @@ import { Property, PropertyDocument } from './entities/property.entity';
 export class PropertyService {
   constructor(
     @InjectModel(Property.name) private propertyModel: Model<PropertyDocument>,
-  ) {
-    console.log('UserService created');
-  }
+  ) {}
 
-  create(createPropertyInput: CreatePropertyInput) {
-    return 'This action adds a new property';
+  async create(input: CreatePropertyInput) {
+    return this.propertyModel.create(input);
   }
 
   findAll() {
@@ -25,11 +23,19 @@ export class PropertyService {
     return `This action returns a #${id} property`;
   }
 
-  update(id: number, updatePropertyInput: UpdatePropertyInput) {
-    return `This action updates a #${id} property`;
+  update(
+    filter: FilterQuery<PropertyDocument>,
+    updatePropertyInput: UpdatePropertyInput,
+  ) {
+    return this.propertyModel.updateOne(filter, updatePropertyInput);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} property`;
+  /**
+   * Remove a property
+   * @param filter FilterQuery<PropertyDocument>
+   * @returns
+   */
+  remove(filter: FilterQuery<PropertyDocument>) {
+    return this.propertyModel.deleteOne(filter);
   }
 }

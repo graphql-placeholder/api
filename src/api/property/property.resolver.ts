@@ -9,8 +9,8 @@ export class PropertyResolver {
   constructor(private readonly propertyService: PropertyService) {}
 
   @Mutation(() => Property)
-  createProperty(@Args('createPropertyInput') createPropertyInput: CreatePropertyInput) {
-    return this.propertyService.create(createPropertyInput);
+  createProperty(@Args('input') input: CreatePropertyInput) {
+    return this.propertyService.create(input);
   }
 
   @Query(() => [Property], { name: 'property' })
@@ -24,12 +24,12 @@ export class PropertyResolver {
   }
 
   @Mutation(() => Property)
-  updateProperty(@Args('updatePropertyInput') updatePropertyInput: UpdatePropertyInput) {
-    return this.propertyService.update(updatePropertyInput.id, updatePropertyInput);
+  updateProperty(@Args('updatePropertyInput') input: UpdatePropertyInput) {
+    return this.propertyService.update({ _id: input.id }, input);
   }
 
   @Mutation(() => Property)
-  removeProperty(@Args('id', { type: () => Int }) id: number) {
-    return this.propertyService.remove(id);
+  removeProperty(@Args('id', { type: () => String }) id: string) {
+    return this.propertyService.remove({ _id: id });
   }
 }
