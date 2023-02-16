@@ -19,17 +19,18 @@ export class TagResolver {
     return this.tagService.findAll(input);
   }
 
-  @Query(() => Tag, { name: 'tag' })
+  @Query(() => Tag, { name: 'tag', nullable: true })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.tagService.findOne({ _id: id });
   }
 
   @Mutation(() => Tag)
-  updateTag(@Args('input') updateTagInput: UpdateTagInput) {
-    return this.tagService.update({ _id: updateTagInput.id }, updateTagInput);
+  async updateTag(@Args('input') input: UpdateTagInput) {
+    const data = await this.tagService.update({ _id: input.id }, input);
+    return data;
   }
 
-  @Mutation(() => Tag)
+  @Mutation(() => Boolean, { nullable: true })
   removeTag(@Args('id', { type: () => String }) id: string) {
     return this.tagService.remove({ _id: id });
   }

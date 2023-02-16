@@ -125,7 +125,7 @@ type Query {
   properties(input: PropertyListQueryInput): PropertyPagination
   property(id: String!): Property
   tags(input: TagListQueryInput!): TagPagination
-  tag(id: String!): Tag!
+  tag(id: String!): Tag
 }
 
 input UserListQueryDto {
@@ -188,7 +188,7 @@ type Mutation {
   removeProperty(id: String!): Boolean!
   createTag(input: CreateTagInput!): Tag!
   updateTag(input: UpdateTagInput!): Tag!
-  removeTag(id: String!): Tag!
+  removeTag(id: String!): Boolean
 }
 
 input CreateUserDTO {

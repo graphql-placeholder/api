@@ -2,6 +2,7 @@ import { AppPaginationResponse } from '@/shared/contracts/app-pagination-respons
 import { SortType } from '@/shared/dto/CommonPaginationDto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ForbiddenError } from 'apollo-server-express';
 import { FilterQuery, Model } from 'mongoose';
 import { CreateTagInput } from './dto/create-tag.input';
 import { TagListQueryInput } from './dto/tag-list.input';
@@ -58,7 +59,7 @@ export class TagService {
       await this.tagModel.updateOne(filter, input);
       return this.findOne(filter);
     } catch (err) {
-      console.log(err);
+      throw new ForbiddenError(err.message);
     }
   }
 
