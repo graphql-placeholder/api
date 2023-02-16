@@ -14,9 +14,8 @@ export class UsersResolver {
   }
 
   @Query(() => UserPagination, { name: 'users', nullable: true })
-  async findAll(@Args('input') input: UserListQueryDto) {
-    // const data = await this.usersService.findAll(input);
-    // return graphQLListBuilder(data);
+  async findAll(@Args('input', { nullable: true }) input: UserListQueryDto) {
+    return this.usersService.findAll(input);
   }
 
   // @Query(() => User, { name: 'user', nullable: true })
