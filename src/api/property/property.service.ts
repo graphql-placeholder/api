@@ -21,26 +21,20 @@ export class PropertyService {
    * @param input CreatePropertyInput
    * @returns
    */
-  async create(input: CreatePropertyInput, fields: string[] = []) {
-    try {
-      if (input.owners) {
-        input.owners = input.owners.map((owner) => {
-          return {
-            ownershipPercentage: owner.ownershipPercentage,
-            user: owner.ownerUID,
-          };
-        });
-      }
-
-      const property = await this.propertyModel.create({
-        ...input,
-        managers: input.managerIds,
+  async create(input: CreatePropertyInput) {
+    if (input.owners) {
+      input.owners = input.owners.map((owner) => {
+        return {
+          ownershipPercentage: owner.ownershipPercentage,
+          user: owner.ownerUID,
+        };
       });
-
-      return this.findOne({ _id: property._id }, fields);
-    } catch (error) {
-      throw new ForbiddenException(error);
     }
+
+    return this.propertyModel.create({
+      ...input,
+      managers: input.managerIds,
+    });
   }
 
   /**
@@ -125,12 +119,19 @@ export class PropertyService {
     filter: FilterQuery<PropertyDocument>,
     input: UpdatePropertyInput,
   ) {
-    try {
-      await this.propertyModel.updateOne(filter, input);
-      return this.findOne(filter);
-    } catch (err) {
-      console.log(err);
+    if (input.owners) {
+      input.owners = input.owners.map((owner) => {
+        return {
+          ownershipPercentage: owner.ownershipPercentage,
+          user: owner.ownerUID,
+        };
+      });
     }
+
+    return this.propertyModel.updateOne(filter, {
+      ...input,
+      managers: input.managerIds,
+    });
   }
 
   /**
@@ -139,11 +140,6 @@ export class PropertyService {
    * @returns
    */
   async remove(filter: FilterQuery<PropertyDocument>) {
-    try {
-      const res = await this.propertyModel.deleteOne(filter);
-      return res.deletedCount > 0;
-    } catch (err) {
-      return false;
-    }
+    return this.propertyModel.deleteOne(filter);
   }
 }

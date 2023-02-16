@@ -5,7 +5,8 @@ import { CreatePropertyInput } from './dto/create-property.input';
 import { UpdatePropertyInput } from './dto/update-property.input';
 import { PropertyListQueryInput } from './dto/property-list.input';
 import getGqlFields from '@/shared/utils/get-gql-fields';
-import { CommonMatchInput } from '@/shared/dto/CommonFindOneDto';
+import { CommonMatchInput, MatchOperator } from '@/shared/dto/CommonFindOneDto';
+import { ForbiddenException } from '@nestjs/common';
 
 @Resolver(() => Property)
 export class PropertyResolver {
@@ -36,13 +37,27 @@ export class PropertyResolver {
     @Args('input') input: CreatePropertyInput,
     @Info() info: any,
   ) {
-    const fields = getGqlFields(info);
-    return this.propertyService.create(input, fields);
+    try {
+      const fields = getGqlFields(info);
+      const property = await this.propertyService.create(input);
+      return this.propertyService.findOne({ _id: property._id }, fields);
+    } catch (error) {
+      throw new ForbiddenException(error.message);
+    }
   }
 
   @Mutation(() => Property)
-  updateProperty(@Args('input') input: UpdatePropertyInput) {
-    return this.propertyService.update({ _id: input.id }, input);
+  async updateProperty(
+    @Args('input') input: UpdatePropertyInput,
+    @Info() info: any,
+  ) {
+    try {
+      const fields = getGqlFields(info);
+      await this.propertyService.update({ _id: input.id }, input);
+      return this.propertyService.findOne({ _id: input.id }, fields);
+    } catch (error) {
+      throw new ForbiddenException(error.message);
+    }
   }
 
   @Mutation(() => Boolean)
