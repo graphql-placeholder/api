@@ -20,6 +20,12 @@ export class Tag {
   @Field(() => String, { nullable: true })
   @Prop()
   type: string;
+
+  @Field(() => Date, { nullable: true })
+  createdAt: Date;
+
+  @Field(() => Date, { nullable: true })
+  updatedAt: Date;
 }
 
 export type TagDocument = HydratedDocument<Tag>;

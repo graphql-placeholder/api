@@ -49,7 +49,14 @@ type Tag {
   name: String!
   description: String
   type: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type TagPagination {
   nodes: [Tag!]
@@ -107,11 +114,6 @@ enum PROPERTY_TYPE {
   INDUSTRIAL
   OFFICE
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type PropertyPagination {
   nodes: [Property!]
@@ -185,6 +187,8 @@ type Mutation {
   updateProperty(input: UpdatePropertyInput!): Property!
   removeProperty(id: String!): Boolean!
   createTag(input: CreateTagInput!): Tag!
+  updateTag(input: UpdateTagInput!): Tag!
+  removeTag(id: String!): Tag!
 }
 
 input CreateUserDTO {
@@ -255,4 +259,11 @@ input CreateTagInput {
   name: String!
   description: String
   type: String
+}
+
+input UpdateTagInput {
+  name: String
+  description: String
+  type: String
+  id: String!
 }

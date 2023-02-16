@@ -28,7 +28,7 @@ export class TagService {
     const count = await this.tagModel.countDocuments(where);
     const skip = (page - 1) * limit;
     const data = await cursor
-      .sort({ [input?.sortBy]: input?.sort == SortType.DESC ? 1 : -1 })
+      .sort({ [input?.sortBy]: input?.sort == SortType.DESC ? -1 : 1 })
       .skip(skip)
       .limit(limit);
 
