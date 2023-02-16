@@ -1,42 +1,34 @@
-import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { Type } from '@nestjs/common';
-
-interface IEdgeType<T> {
-  cursor: string;
-  node: T;
-}
+import { Field, ObjectType } from '@nestjs/graphql';
 
 export interface IPaginatedType<T> {
-  edges: IEdgeType<T>[];
   nodes: T[];
-  totalCount: number;
-  hasNextPage: boolean;
 }
 
-export function Paginated<T>(classRef: Type<T>): Type<IPaginatedType<T>> {
-  @ObjectType(`${classRef.name}Edge`)
-  abstract class EdgeType {
-    @Field((type) => String)
-    cursor: string;
+@ObjectType()
+export class PagniationMeta {
+  @Field(() => Number)
+  totalCount: number;
 
-    @Field((type) => classRef)
-    node: T;
-  }
+  @Field(() => Number)
+  currentPage: number;
 
+  @Field(() => Boolean)
+  hasNextPage: boolean;
+
+  @Field(() => Number)
+  totalPages: number;
+}
+
+export function Paginated<T>(classRef: Type<T>) {
   @ObjectType({ isAbstract: true })
-  abstract class PaginatedType implements IPaginatedType<T> {
-    @Field((type) => [EdgeType], { nullable: true })
-    edges: EdgeType[];
-
-    @Field((type) => [classRef], { nullable: true })
+  abstract class PaginatedType {
+    @Field(() => [classRef], { nullable: true })
     nodes: T[];
 
-    @Field((type) => Int)
-    totalCount: number;
-
-    @Field()
-    hasNextPage: boolean;
+    @Field(() => PagniationMeta, { nullable: true })
+    meta: string;
   }
 
-  return PaginatedType as Type<IPaginatedType<T>>;
+  return PaginatedType;
 }

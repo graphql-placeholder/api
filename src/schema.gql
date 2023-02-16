@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PagniationMeta {
+  totalCount: Float!
+  currentPage: Float!
+  hasNextPage: Boolean!
+  totalPages: Float!
+}
+
 type UserAdditionalDocument {
   name: String
   note: String
@@ -32,16 +39,21 @@ enum USER_DOMAIN {
   SECURITY_GUARD
 }
 
-type UserEdge {
-  cursor: String!
-  node: User!
+type UserPagination {
+  nodes: [User!]
+  meta: PagniationMeta
 }
 
-type UserPagination {
-  edges: [UserEdge!]
-  nodes: [User!]
-  totalCount: Int!
-  hasNextPage: Boolean!
+type Tag {
+  _id: ID!
+  name: String!
+  description: String
+  type: String
+}
+
+type TagPagination {
+  nodes: [Tag!]
+  meta: PagniationMeta
 }
 
 type FixedCost {
@@ -51,7 +63,7 @@ type FixedCost {
 }
 
 type PropertyOwner {
-  owner: User!
+  user: User!
   ownershipPercentage: Int!
 }
 
@@ -85,6 +97,7 @@ type Property {
   fixedCosts: [FixedCost!]
   createdAt: DateTime!
   updatedAt: DateTime!
+  tags: [String!]
 }
 
 enum PROPERTY_TYPE {
@@ -100,16 +113,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type PropertyPagination {
+  nodes: [Property!]
+  meta: PagniationMeta
+}
+
 type Query {
-  users(input: UserListQueryDto!): UserPagination!
-  properties(input: PropertyListQueryInput!): [Property!]!
+  users(input: UserListQueryDto!): UserPagination
+  properties(input: PropertyListQueryInput): PropertyPagination
   property(id: String!): Property
+  tags(input: TagListQueryInput!): TagPagination
+  tag(id: String!): Tag!
 }
 
 input UserListQueryDto {
-  take: Int!
-  offset: Int!
-  after: String
+  page: Int
+  limit: Int
   sort: SortType
   sortBy: String
   where: CommonMatchInput
@@ -145,9 +164,16 @@ enum MatchOperator {
 }
 
 input PropertyListQueryInput {
-  take: Int!
-  offset: Int!
-  after: String
+  page: Int
+  limit: Int
+  sort: SortType
+  sortBy: String
+  where: CommonMatchInput
+}
+
+input TagListQueryInput {
+  page: Int
+  limit: Int
   sort: SortType
   sortBy: String
   where: CommonMatchInput
@@ -155,9 +181,10 @@ input PropertyListQueryInput {
 
 type Mutation {
   createUser(input: CreateUserDTO!): User!
-  createProperty(input: CreatePropertyInput!): Property!
+  createProperty(input: CreatePropertyInput!): Property
   updateProperty(input: UpdatePropertyInput!): Property!
   removeProperty(id: String!): Boolean!
+  createTag(input: CreateTagInput!): Tag!
 }
 
 input CreateUserDTO {
@@ -182,11 +209,17 @@ input CreatePropertyInput {
   defaultUnitRentAmount: Int
   type: PROPERTY_TYPE
   photos: [String!]
-  ownerIds: [String!]
+  owners: [PropertyOwnerInput!]
   managerIds: [String!]
   serviceProviders: [PropertyServiceProviderInput!]
   variableCosts: [String!]
   fixedCosts: [FixedCostInput!]
+  tags: [String!]
+}
+
+input PropertyOwnerInput {
+  ownerUID: String!
+  ownershipPercentage: Float!
 }
 
 input PropertyServiceProviderInput {
@@ -209,10 +242,17 @@ input UpdatePropertyInput {
   defaultUnitRentAmount: Int
   type: PROPERTY_TYPE
   photos: [String!]
-  ownerIds: [String!]
+  owners: [PropertyOwnerInput!]
   managerIds: [String!]
   serviceProviders: [PropertyServiceProviderInput!]
   variableCosts: [String!]
   fixedCosts: [FixedCostInput!]
+  tags: [String!]
   id: String!
+}
+
+input CreateTagInput {
+  name: String!
+  description: String
+  type: String
 }

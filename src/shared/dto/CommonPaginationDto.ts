@@ -13,17 +13,13 @@ registerEnumType(SortType, {
 
 @InputType()
 export class CommonPaginationDto {
-  @Field(() => Int)
-  @IsNotEmpty()
-  take: number;
-
-  @Field(() => Int)
-  @IsNotEmpty()
-  offset: number;
-
-  @Field(() => String, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsOptional()
-  after?: string;
+  page: number;
+
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  limit: number;
 
   @Field(() => SortType, { nullable: true })
   @IsOptional()

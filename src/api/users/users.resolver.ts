@@ -1,11 +1,8 @@
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
-import { UsersService } from './users.service';
-import { User, UserPagination } from './entities/user.entity';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserDTO } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
 import { UserListQueryDto } from './dto/user-list-query.dto';
-import { graphQLListBuilder } from '@/shared/utils/gql-list-builder';
-import { CommonMatchInput } from '@/shared/dto/CommonFindOneDto';
+import { User, UserPagination } from './entities/user.entity';
+import { UsersService } from './users.service';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -16,7 +13,7 @@ export class UsersResolver {
     return this.usersService.createUser(input);
   }
 
-  @Query(() => UserPagination, { name: 'users' })
+  @Query(() => UserPagination, { name: 'users', nullable: true })
   async findAll(@Args('input') input: UserListQueryDto) {
     // const data = await this.usersService.findAll(input);
     // return graphQLListBuilder(data);

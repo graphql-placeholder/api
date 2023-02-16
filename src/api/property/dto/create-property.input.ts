@@ -2,6 +2,7 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { PROPERTY_TYPE } from '../entities/property.entity';
 import { FixedCostInput } from './fixed-cost.input';
+import { PropertyOwnerInput } from './property-owner.input';
 import { PropertyServiceProviderInput } from './property-service-provider.input';
 
 @InputType()
@@ -30,9 +31,9 @@ export class CreatePropertyInput {
   @IsOptional()
   photos?: string[];
 
-  @Field(() => [String], { nullable: true })
+  @Field(() => [PropertyOwnerInput], { nullable: true })
   @IsOptional()
-  ownerIds?: string[];
+  owners?: PropertyOwnerInput[];
 
   @Field(() => [String], { nullable: true })
   @IsOptional()
@@ -48,4 +49,8 @@ export class CreatePropertyInput {
 
   @Field(() => [FixedCostInput], { nullable: true })
   fixedCosts?: FixedCostInput[];
+
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  tags?: string[];
 }

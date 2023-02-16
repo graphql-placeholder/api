@@ -1,5 +1,6 @@
 import { User } from '@/api/users/entities/user.entity';
-import { ObjectType, Field, Int, registerEnumType, ID } from '@nestjs/graphql';
+import { Paginated } from '@/shared/object-types/paginationObject';
+import { Field, ID, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { FixedCost } from './fixed-cost.entity';
@@ -73,7 +74,14 @@ export class Property {
 
   @Field(() => Date)
   updatedAt?: Date;
+
+  @Field(() => [String], { nullable: true })
+  @Prop()
+  tags: string[];
 }
 
 export type PropertyDocument = HydratedDocument<Property>;
 export const PropertySchema = SchemaFactory.createForClass(Property);
+
+@ObjectType()
+export class PropertyPagination extends Paginated(Property) {}

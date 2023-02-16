@@ -1,7 +1,9 @@
+import { AppPaginationResponse } from '@/shared/contracts/app-pagination-response';
 import { SortType } from '@/shared/dto/CommonPaginationDto';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
+import { TagService } from '../tag/tag.service';
 import { CreatePropertyInput } from './dto/create-property.input';
 import { PropertyListQueryInput } from './dto/property-list.input';
 import { UpdatePropertyInput } from './dto/update-property.input';
@@ -11,6 +13,7 @@ import { Property, PropertyDocument } from './entities/property.entity';
 export class PropertyService {
   constructor(
     @InjectModel(Property.name) private propertyModel: Model<PropertyDocument>,
+    private readonly tagService: TagService,
   ) {}
 
   /**
@@ -18,8 +21,22 @@ export class PropertyService {
    * @param input CreatePropertyInput
    * @returns
    */
-  async create(input: CreatePropertyInput) {
-    return this.propertyModel.create(input);
+  async create(input: CreatePropertyInput, selectedFields?: string[]) {
+    try {
+      if (input.owners) {
+        input.owners = input.owners.map((owner) => {
+          return {
+            ownershipPercentage: owner.ownershipPercentage,
+            user: owner.ownerUID,
+          };
+        });
+      }
+      const property = await this.propertyModel.create(input);
+
+      return property;
+    } catch (error) {
+      throw new ForbiddenException(error);
+    }
   }
 
   /**
@@ -31,19 +48,41 @@ export class PropertyService {
     return this.propertyModel.insertMany(input);
   }
 
-  async findAll(input: PropertyListQueryInput) {
-    const { take, offset } = input;
-    const data = await this.propertyModel
-      .find({
-        [input?.where?.key]: {
-          [`$${input?.where?.operator}`]: input?.where?.value,
-        },
-      })
-      .sort({ [input?.sortBy]: input?.sort == SortType.DESC ? 1 : -1 })
-      .skip(offset)
-      .limit(take);
+  async findAll(input: PropertyListQueryInput, fields: string[]) {
+    const { page = 1, limit = 10 } = input;
+    const where = {
+      [input?.where?.key]: {
+        [`$${input?.where?.operator}`]: input?.where?.value,
+      },
+    };
 
-    return data;
+    const cursor = this.propertyModel.find(where);
+
+    // if (fields.includes('owners')) {
+    //   cursor.populate({
+    //     path: 'owners.user',
+    //     model: 'User',
+    //   });
+    // }
+
+    cursor.populate({
+      path: 'owners.user',
+      model: 'User',
+    });
+
+    const count = await this.propertyModel.countDocuments(where);
+    const skip = (page - 1) * limit;
+    const data = await cursor
+      .sort({ [input?.sortBy]: input?.sort == SortType.DESC ? 1 : -1 })
+      .skip(skip)
+      .limit(limit);
+
+    return new AppPaginationResponse(data, {
+      currentPage: page,
+      hasNextPage: page * limit < count,
+      totalCount: count,
+      totalPages: Math.ceil(count / limit),
+    });
   }
 
   /**
@@ -51,8 +90,12 @@ export class PropertyService {
    * @param filter FilterQuery<PropertyDocument>
    * @returns
    */
-  findOne(filter: FilterQuery<PropertyDocument>) {
-    return this.propertyModel.findOne(filter);
+  async findOne(filter: FilterQuery<PropertyDocument>) {
+    const data = await this.propertyModel
+      .findOne({ ...filter })
+      .populate('owners.owner');
+
+    return data;
   }
 
   /**

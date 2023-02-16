@@ -1,17 +1,22 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Info } from '@nestjs/graphql';
 import { PropertyService } from './property.service';
-import { Property } from './entities/property.entity';
+import { Property, PropertyPagination } from './entities/property.entity';
 import { CreatePropertyInput } from './dto/create-property.input';
 import { UpdatePropertyInput } from './dto/update-property.input';
 import { PropertyListQueryInput } from './dto/property-list.input';
+import getGqlFields from '@/shared/utils/get-gql-fields';
 
 @Resolver(() => Property)
 export class PropertyResolver {
   constructor(private readonly propertyService: PropertyService) {}
 
-  @Query(() => [Property], { name: 'properties' })
-  findAll(@Args('input') input: PropertyListQueryInput) {
-    return this.propertyService.findAll(input);
+  @Query(() => PropertyPagination, { name: 'properties', nullable: true })
+  async findAll(
+    @Args('input', { nullable: true }) input: PropertyListQueryInput,
+    @Info() info: any,
+  ) {
+    const fields = getGqlFields(info);
+    return this.propertyService.findAll(input, fields);
   }
 
   @Query(() => Property, { name: 'property', nullable: true })
@@ -19,8 +24,8 @@ export class PropertyResolver {
     return this.propertyService.findOne({ _id: id });
   }
 
-  @Mutation(() => Property)
-  createProperty(@Args('input') input: CreatePropertyInput) {
+  @Mutation(() => Property, { nullable: true })
+  async createProperty(@Args('input') input: CreatePropertyInput) {
     return this.propertyService.create(input);
   }
 

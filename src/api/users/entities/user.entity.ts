@@ -18,7 +18,7 @@ registerEnumType(USER_DOMAIN, {
 });
 
 @ObjectType()
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection: 'users' })
 export class User {
   @Field(() => ID)
   _id?: string;
