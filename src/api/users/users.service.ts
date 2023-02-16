@@ -84,9 +84,9 @@ export class UsersService {
    * @param filter
    * @returns
    */
-  // async deleteUser(filter: FilterQuery<UserDocument>) {
-  //   return this.userModel.deleteOne(filter);
-  // }
+  async deleteUser(filter: FilterQuery<UserDocument>) {
+    return this.userModel.deleteOne(filter);
+  }
 
   /**
    * Compare password
@@ -97,7 +97,4 @@ export class UsersService {
   // comparePassword(user: UserDocument, password: string): boolean {
   //   return compareSync(password, user.password);
   // }
-}
-function hashSync(password: any, arg1: number): any {
-  throw new Error('Function not implemented.');
 }

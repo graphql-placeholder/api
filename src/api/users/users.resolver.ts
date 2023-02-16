@@ -38,8 +38,15 @@ export class UsersResolver {
     }
   }
 
-  // @Mutation(() => User)
-  // removeUser(@Args('id', { type: () => Int }) id: number) {
-  //   // return this.usersService.remove(id);
-  // }
+  @Mutation(() => Boolean, { nullable: true })
+  async removeUser(@Args('input') input: CommonMatchInput) {
+    try {
+      const res = await this.usersService.deleteUser({
+        [input.key]: { [`$${input.operator}`]: input.value },
+      });
+      return res.deletedCount > 0;
+    } catch (error) {
+      throw new ForbiddenException(error.message);
+    }
+  }
 }
