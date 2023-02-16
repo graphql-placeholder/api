@@ -9,7 +9,7 @@ import { UsersService } from './users.service';
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @Mutation(() => User)
+  @Mutation(() => User, { nullable: true })
   createUser(@Args('input') input: CreateUserDTO) {
     return this.usersService.createUser(input);
   }
