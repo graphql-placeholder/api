@@ -1,4 +1,5 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
+import { IsNotEmpty } from 'class-validator';
 
 export enum MatchOperator {
   eq = 'eq',
@@ -25,11 +26,14 @@ registerEnumType(MatchOperator, {
 @InputType()
 export class CommonMatchInput {
   @Field(() => String)
+  @IsNotEmpty()
   key: string;
 
   @Field(() => MatchOperator)
+  @IsNotEmpty()
   operator: MatchOperator;
 
   @Field(() => String, { nullable: true })
+  @IsNotEmpty()
   value: string;
 }

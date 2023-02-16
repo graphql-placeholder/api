@@ -1,3 +1,4 @@
+import { CommonMatchInput } from '@/shared/dto/CommonFindOneDto';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserDTO } from './dto/create-user.input';
 import { UserListQueryDto } from './dto/user-list-query.dto';
@@ -18,10 +19,12 @@ export class UsersResolver {
     return this.usersService.findAll(input);
   }
 
-  // @Query(() => User, { name: 'user', nullable: true })
-  // async findOne(@Args('input') input: CommonMatchInput) {
-  //   // return this.usersService.findOne(input);
-  // }
+  @Query(() => User, { name: 'user', nullable: true })
+  async findOne(@Args('input') input: CommonMatchInput) {
+    return this.usersService.findOne({
+      [input.key]: { [`$${input.operator}`]: input.value },
+    });
+  }
 
   // @Mutation(() => User)
   // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {

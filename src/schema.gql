@@ -122,6 +122,7 @@ type PropertyPagination {
 
 type Query {
   users(input: UserListQueryDto): UserPagination
+  user(input: CommonMatchInput!): User
   properties(input: PropertyListQueryInput): PropertyPagination
   property(id: String!): Property
   tags(input: TagListQueryInput!): TagPagination
