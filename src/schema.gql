@@ -184,7 +184,7 @@ input TagListQueryInput {
 
 type Mutation {
   createUser(input: CreateUserDTO!): User
-  updateUser(input: UpdateUserInput!): User!
+  updateUser(input: UpdateUserInput!): User
   removeUser(input: CommonMatchInput!): Boolean
   createProperty(input: CreatePropertyInput!): Property
   updateProperty(input: UpdatePropertyInput!): Property!
