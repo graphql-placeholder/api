@@ -4,6 +4,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { CreateUserDTO } from './dto/create-user.input';
+import { UpdateUserInput } from './dto/update-user.input';
 import { UserListQueryDto } from './dto/user-list-query.dto';
 import { User, UserDocument } from './entities/user.entity';
 
@@ -74,9 +75,9 @@ export class UsersService {
    * @param filter
    * @param body
    */
-  // async updateUser(filter: FilterQuery<UserDocument>, body: UpdateUserDto) {
-  //   return this.userModel.updateOne(filter, body);
-  // }
+  async updateUser(filter: FilterQuery<UserDocument>, body: UpdateUserInput) {
+    return this.userModel.updateOne(filter, body);
+  }
 
   /**
    * Delete a user

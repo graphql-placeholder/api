@@ -1,8 +1,10 @@
+import { Field, InputType, PartialType } from '@nestjs/graphql';
+import { IsNotEmpty } from 'class-validator';
 import { CreateUserDTO } from './create-user.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateUserInput extends PartialType(CreateUserDTO) {
-  @Field(() => Int)
-  id: number;
+  @Field(() => String)
+  @IsNotEmpty()
+  id: string;
 }

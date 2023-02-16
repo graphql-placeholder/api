@@ -1,6 +1,8 @@
 import { CommonMatchInput } from '@/shared/dto/CommonFindOneDto';
+import { ForbiddenException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserDTO } from './dto/create-user.input';
+import { UpdateUserInput } from './dto/update-user.input';
 import { UserListQueryDto } from './dto/user-list-query.dto';
 import { User, UserPagination } from './entities/user.entity';
 import { UsersService } from './users.service';
@@ -26,10 +28,15 @@ export class UsersResolver {
     });
   }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-  //   // return this.usersService.update(updateUserInput.id, updateUserInput);
-  // }
+  @Mutation(() => User)
+  async updateUser(@Args('input') input: UpdateUserInput) {
+    try {
+      await this.usersService.updateUser({ _id: input.id }, input);
+      return this.usersService.findOne({ _id: input.id });
+    } catch (error) {
+      throw new ForbiddenException(error.message);
+    }
+  }
 
   // @Mutation(() => User)
   // removeUser(@Args('id', { type: () => Int }) id: number) {
