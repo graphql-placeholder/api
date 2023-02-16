@@ -61,7 +61,14 @@ export class PropertyResolver {
   }
 
   @Mutation(() => Boolean)
-  removeProperty(@Args('id', { type: () => String }) id: string) {
-    return this.propertyService.remove({ _id: id });
+  async removeProperty(@Args('input') input: CommonMatchInput) {
+    try {
+      const res = await this.propertyService.remove({
+        [input.key]: { [`$${input.operator}`]: input.value },
+      });
+      return res.deletedCount > 0;
+    } catch (error) {
+      throw new ForbiddenException(error.message);
+    }
   }
 }

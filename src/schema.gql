@@ -188,7 +188,7 @@ type Mutation {
   removeUser(input: CommonMatchInput!): Boolean
   createProperty(input: CreatePropertyInput!): Property
   updateProperty(input: UpdatePropertyInput!): Property!
-  removeProperty(id: String!): Boolean!
+  removeProperty(input: CommonMatchInput!): Boolean!
   createTag(input: CreateTagInput!): Tag!
   updateTag(input: UpdateTagInput!): Tag!
   removeTag(id: String!): Boolean
