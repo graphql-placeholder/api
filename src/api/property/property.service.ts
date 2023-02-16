@@ -21,7 +21,7 @@ export class PropertyService {
    * @param input CreatePropertyInput
    * @returns
    */
-  async create(input: CreatePropertyInput, selectedFields?: string[]) {
+  async create(input: CreatePropertyInput) {
     try {
       if (input.owners) {
         input.owners = input.owners.map((owner) => {
@@ -31,9 +31,13 @@ export class PropertyService {
           };
         });
       }
-      const property = await this.propertyModel.create(input);
 
-      return property;
+      const property = await this.propertyModel.create({
+        ...input,
+        managers: input.managerIds,
+      });
+
+      return this.findOne({ _id: property._id });
     } catch (error) {
       throw new ForbiddenException(error);
     }
@@ -58,22 +62,23 @@ export class PropertyService {
 
     const cursor = this.propertyModel.find(where);
 
-    // if (fields.includes('owners')) {
-    //   cursor.populate({
-    //     path: 'owners.user',
-    //     model: 'User',
-    //   });
-    // }
+    if (fields.includes('owners')) {
+      cursor.populate({
+        path: 'owners.user',
+        model: 'User',
+      });
+    }
 
-    cursor.populate({
-      path: 'owners.user',
-      model: 'User',
-    });
+    if (fields.includes('managers')) {
+      cursor.populate({
+        path: 'managers',
+      });
+    }
 
     const count = await this.propertyModel.countDocuments(where);
     const skip = (page - 1) * limit;
     const data = await cursor
-      .sort({ [input?.sortBy]: input?.sort == SortType.DESC ? 1 : -1 })
+      .sort({ [input?.sortBy]: input?.sort == SortType.DESC ? -1 : 1 })
       .skip(skip)
       .limit(limit);
 
@@ -90,10 +95,23 @@ export class PropertyService {
    * @param filter FilterQuery<PropertyDocument>
    * @returns
    */
-  async findOne(filter: FilterQuery<PropertyDocument>) {
-    const data = await this.propertyModel
-      .findOne({ ...filter })
-      .populate('owners.owner');
+  async findOne(filter: FilterQuery<PropertyDocument>, fields: string[] = []) {
+    const cursor = this.propertyModel.findOne({ ...filter });
+
+    if (fields.includes('owners')) {
+      cursor.populate({
+        path: 'owners.user',
+        model: 'User',
+      });
+    }
+
+    if (fields.includes('managers')) {
+      cursor.populate({
+        path: 'managers',
+      });
+    }
+
+    const data = await cursor;
 
     return data;
   }

@@ -5,6 +5,7 @@ import { CreatePropertyInput } from './dto/create-property.input';
 import { UpdatePropertyInput } from './dto/update-property.input';
 import { PropertyListQueryInput } from './dto/property-list.input';
 import getGqlFields from '@/shared/utils/get-gql-fields';
+import { CommonMatchInput } from '@/shared/dto/CommonFindOneDto';
 
 @Resolver(() => Property)
 export class PropertyResolver {
@@ -15,13 +16,19 @@ export class PropertyResolver {
     @Args('input', { nullable: true }) input: PropertyListQueryInput,
     @Info() info: any,
   ) {
-    const fields = getGqlFields(info);
+    const fields = getGqlFields(info, 'nodes');
     return this.propertyService.findAll(input, fields);
   }
 
   @Query(() => Property, { name: 'property', nullable: true })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.propertyService.findOne({ _id: id });
+  findOne(@Args('input') input: CommonMatchInput, @Info() info: any) {
+    const fields = getGqlFields(info);
+    return this.propertyService.findOne(
+      {
+        [input.key]: { [`$${input.operator}`]: input.value },
+      },
+      fields,
+    );
   }
 
   @Mutation(() => Property, { nullable: true })

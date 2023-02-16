@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import { USER_DOMAIN } from '../entities/user.entity';
 
 @InputType()
 export class UserAdditionalDocumentDTO {
@@ -35,4 +36,8 @@ export class CreateUserDTO {
   @Field(() => [UserAdditionalDocumentDTO], { nullable: true })
   @IsOptional()
   additionalDocuments: UserAdditionalDocumentDTO[];
+
+  @Field(() => USER_DOMAIN, { nullable: true })
+  @IsOptional()
+  domain: USER_DOMAIN;
 }

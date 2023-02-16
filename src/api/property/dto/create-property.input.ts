@@ -48,6 +48,7 @@ export class CreatePropertyInput {
   variableCosts?: string[];
 
   @Field(() => [FixedCostInput], { nullable: true })
+  @IsOptional()
   fixedCosts?: FixedCostInput[];
 
   @Field(() => [String], { nullable: true })

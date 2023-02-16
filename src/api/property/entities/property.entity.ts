@@ -6,6 +6,7 @@ import { HydratedDocument } from 'mongoose';
 import { FixedCost } from './fixed-cost.entity';
 import { PropertyOwner } from './property-owner.entity';
 import { PropertyServiceProvider } from './service-provider.entity';
+import { Schema as MongooseSchema } from 'mongoose';
 
 export enum PROPERTY_TYPE {
   APARTMENT = 'APARTMENT',
@@ -53,7 +54,7 @@ export class Property {
   @Field(() => [PropertyOwner], { nullable: true })
   owners?: PropertyOwner[];
 
-  @Prop()
+  @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'User' })
   @Field(() => [User], { nullable: true })
   managers?: User[];
 

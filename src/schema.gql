@@ -124,7 +124,7 @@ type Query {
   users(input: UserListQueryDto): UserPagination
   user(input: CommonMatchInput!): User
   properties(input: PropertyListQueryInput): PropertyPagination
-  property(id: String!): Property
+  property(input: CommonMatchInput!): Property
   tags(input: TagListQueryInput!): TagPagination
   tag(id: String!): Tag
 }
@@ -200,6 +200,7 @@ input CreateUserDTO {
   avatar: String
   contactNumbers: [String!]
   additionalDocuments: [UserAdditionalDocumentDTO!]
+  domain: USER_DOMAIN
 }
 
 input UserAdditionalDocumentDTO {
@@ -214,6 +215,7 @@ input UpdateUserInput {
   avatar: String
   contactNumbers: [String!]
   additionalDocuments: [UserAdditionalDocumentDTO!]
+  domain: USER_DOMAIN
   id: String!
 }
 
