@@ -32,8 +32,12 @@ export class PropertyResolver {
   }
 
   @Mutation(() => Property, { nullable: true })
-  async createProperty(@Args('input') input: CreatePropertyInput) {
-    return this.propertyService.create(input);
+  async createProperty(
+    @Args('input') input: CreatePropertyInput,
+    @Info() info: any,
+  ) {
+    const fields = getGqlFields(info);
+    return this.propertyService.create(input, fields);
   }
 
   @Mutation(() => Property)

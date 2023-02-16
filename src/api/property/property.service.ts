@@ -21,7 +21,7 @@ export class PropertyService {
    * @param input CreatePropertyInput
    * @returns
    */
-  async create(input: CreatePropertyInput) {
+  async create(input: CreatePropertyInput, fields: string[] = []) {
     try {
       if (input.owners) {
         input.owners = input.owners.map((owner) => {
@@ -37,7 +37,7 @@ export class PropertyService {
         managers: input.managerIds,
       });
 
-      return this.findOne({ _id: property._id });
+      return this.findOne({ _id: property._id }, fields);
     } catch (error) {
       throw new ForbiddenException(error);
     }
@@ -52,7 +52,7 @@ export class PropertyService {
     return this.propertyModel.insertMany(input);
   }
 
-  async findAll(input: PropertyListQueryInput, fields: string[]) {
+  async findAll(input: PropertyListQueryInput, fields: string[] = []) {
     const { page = 1, limit = 10 } = input;
     const where = {
       [input?.where?.key]: {
@@ -112,7 +112,6 @@ export class PropertyService {
     }
 
     const data = await cursor;
-
     return data;
   }
 
