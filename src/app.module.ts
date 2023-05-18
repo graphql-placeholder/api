@@ -7,9 +7,6 @@ import { AppService } from './app.service';
 import { UsersModule } from './api/users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { PropertyModule } from './api/property/property.module';
-import { TagModule } from './api/tag/tag.module';
-
 @Module({
   imports: [
     // ---------------------------------------------------------
@@ -31,8 +28,6 @@ import { TagModule } from './api/tag/tag.module';
     // Application modules
     // ---------------------------------------------------------
     UsersModule,
-    PropertyModule,
-    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
